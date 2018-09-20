@@ -11,26 +11,17 @@ class RestAPI {
   static const _BASE_URL = "https://api.learnable.ch/api/auth/";
 
   static const _AUTH_URL = _BASE_URL+"login";
+  static const _LOGOUT_URL = _BASE_URL+"logout";
   static const _GET_LOGGED_IN_USER = _BASE_URL + "user";
+  static const _GET_EVENTS_URL = _BASE_URL+"events";
+  static const _GET_EVENT_TYPES_URL = _BASE_URL+"event_types";
+  static const _GET_LESSONS_URL = _BASE_URL+"lessons";
+  static const _GET_CLASSES_URL = _BASE_URL+"classes";
+  static const _GET_SCHOOLS_URL = _BASE_URL+"schools";
+  static const _GET_COURSES_URL = _BASE_URL+"courses";
+  static const _GET_CLASS_MEMBERS_URL = _BASE_URL+"classmembers";
+  static const _GET_EVENT_MEMBERS = _BASE_URL+"eventmembers";
 
-  static const _DATA_URL = _BASE_URL + "/data";
-
-  static const _TOKEN_URL = _BASE_URL + "/token";
-  static const _LOGIN_USER_URL = _BASE_URL + "/login";
-  static const _GET_LOCATIONS_URL = _DATA_URL + "/locations";
-  static const _GET_SCHOOLS_URL = _DATA_URL + "/schools";
-  static const _GET_CLASSES_URL = _DATA_URL + "/classes";
-  static const _GET_COURSES_URL = _DATA_URL + "/courses";
-  static const _GET_LESSONS_URL = _DATA_URL + "/lessons";
-  static const _GET_CLASS_TEACHERS_URL = _GET_LESSONS_URL + "/whereClass";
-  static const _GET_LESSONS_BY_DATE_URL = _GET_LESSONS_URL + "/whereDate";
-  static const _GET_USER_URL = _DATA_URL + "/users";
-  static const _GET_TEACHER_URL = _GET_USER_URL + "/teachers";
-  static const _GET_USER_CLASSES_URL = _DATA_URL + "/classmembers/pupil";
-  static const _GET_CLASS_MEMBERS_URL = _DATA_URL + "/classmembers/class";
-  static const _GET_EVENTS_URL = _DATA_URL + "/events";
-  static const _GET_EVENT_TYPES_URL = _DATA_URL + "/event_types";
-  static const _GET_EVENT_MEMBERS_URL = _DATA_URL + "/eventmembers";
 
   static Map<String, String> headers = Map();
 
@@ -55,6 +46,10 @@ class RestAPI {
       return;
     });
   }
+
+  void logout(){
+    _netUtil.get(_LOGOUT_URL);
+  }
   
   Future<User> getLoggedInUser() async {
     return _netUtil.get(
@@ -66,115 +61,35 @@ class RestAPI {
     });
   }
 
-  Future<List<int>> getUserClasses(User user) async {
-    var url = "$_GET_USER_CLASSES_URL/${user.id}";
+
+
+  Future<Map<int, Class>> getUserClasses() async {
     return _netUtil.get(
-      url
+      _GET_CLASSES_URL
     ).then((dynamic res){
-      List<int> list = List();
+      Map<int, Class> map = Map();
 
       for (var row in res){
-        list.add(row['class']);
-      }
-
-      return list;
-    });
-  }
-
-  Future<List<int>> getClassTeachers(int id) async {
-    var url = "$_GET_CLASS_TEACHERS_URL/$id";
-    return _netUtil.get(
-      url
-    ).then((dynamic res){
-      List<int> list = List();
-
-      for (var row in res){
-        list.add(row['teacher']);
-      }
-
-      return list;
-    });
-  }
-
-  Future<Map<int, Lesson>> getClassLessons(int id) async {
-    var url = "$_GET_CLASS_TEACHERS_URL/$id";
-    return _netUtil.get(
-        url
-    ).then((dynamic res){
-      Map<int, Lesson> map = Map();
-
-      for (var row in res){
-        var l = Lesson();
-        l.initializeAsyncFromMap(row);
-        map[l.id] = l;
+        Class c = Class();
+        c.initializeAsyncFromMap(row);
+        map[c.id] = c;
       }
 
       return map;
     });
   }
 
-  Future<Map<int, Lesson>> getLessonsByDate(String date) async {
-    var url = "$_GET_LESSONS_BY_DATE_URL/$date";
+  Future<Map<int, Event>> getUserEvents() async {
     return _netUtil.get(
-        url
+      _GET_EVENTS_URL
     ).then((dynamic res){
-      Map<int, Lesson> map = Map();
-
+      Map<int, Event> map = Map();
       for (var row in res){
-        var l = Lesson();
-        l.initializeAsyncFromMap(row);
-        map[l.id] = l;
+        Event e = Event();
+        e.initializeAsyncFromMap(row);
+        map[e.id] = e;
       }
-
       return map;
-    });
-  }
-
-  Future<List<int>> getClassMemberIds(int id) async {
-    var url = "$_GET_CLASS_MEMBERS_URL/$id";
-    return _netUtil.get(
-        url
-    ).then((dynamic res) async {
-      List<int> list = List();
-      for (var row in res){
-        list.add(row['pupil']);
-      }
-      return list;
-    });
-  }
-
-  Future<Map<int, Member>> getClassMembers(int id) async {
-    var url = "$_GET_CLASS_MEMBERS_URL/$id";
-    return _netUtil.get(
-        url
-    ).then((dynamic res) async {
-      Map<int, Member> members = Map();
-      for (var row in res){
-        await getMemberById(row['pupil']).then((member) => members[member.id] = member );
-      }
-      return members;
-    });
-  }
-
-  Future<List<int>> getUserEvents(User user) async {
-    var url = "$_GET_EVENT_MEMBERS_URL/user/${user.id}";
-    return _netUtil.get(
-      url
-    ).then((dynamic res){
-      List<int> list = List();
-      for (var row in res){
-        list.add(row['event']);
-      }
-      return list;
-    });
-  }
-
-  Future<Member> getMemberById(int id) async {
-    var url = "$_GET_USER_URL/$id";
-    return _netUtil.get(
-        url
-    ).then((dynamic res) async {
-      return Member.fromMap(res);
     });
   }
 
@@ -197,24 +112,6 @@ class RestAPI {
       var s = School();
       await s.initializeAsyncFromMap(res);
       return s;
-    });
-  }
-
-  Future<Location> getLocationByZip(int zip) async {
-    var url = "$_GET_LOCATIONS_URL/$zip";
-    return _netUtil.get(
-      url
-    ).then((dynamic res){
-      return Location.fromMap(res);
-    });
-  }
-
-  Future<Teacher> getTeacherById(int id) async {
-    var url = "$_GET_TEACHER_URL/$id";
-    return _netUtil.get(
-      url
-    ).then((dynamic res){
-      return Teacher.fromMap(res);
     });
   }
 

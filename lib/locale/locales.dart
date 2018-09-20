@@ -51,6 +51,9 @@ class AppLocalizations {
       "credits":"Credits",
       "classmates":"Classmates",
       "teachers":"Class teachers",
+      "settings":"Settings",
+      "isOnlineText":"Aaaaaand we are live!",
+      "isOfflineText":"looks like Joey doesn't share internet.",
     },
     "de":{
       "userData":"Benutzerdaten",
@@ -91,6 +94,9 @@ class AppLocalizations {
       "credits":"Danksagungen",
       "classmates":"Klassenmitglieder",
       "teachers":"Klassenlehrer",
+      "settings":"Einstellungen",
+      "isOnlineText":"Und wir sind zurück im Internet",
+      "isOfflineText":"Scotty, das Internet ist ausgefallen...",
     },
     "fr":{
       "userData":"Données utilisateur",
@@ -131,6 +137,9 @@ class AppLocalizations {
       "credits":"Générique",
       "classmates":"Membres du groupe",
       "teachers":"Professeurs de classe",
+      "settings":"Paramètres",
+      "isOnlineText":"Connexion Internet : true",
+      "isOfflineText":"On dirait qu'on a perdu notre connexion.",
     },
     "es":{
       "userData":"Datos de usuario",
@@ -171,6 +180,9 @@ class AppLocalizations {
       "credits":"Reconocimientos",
       "classmates":"Miembros de clase",
       "teachers":"Maestro de clase",
+      "settings":"Configuraciones",
+      "isOnlineText":"Conexión a Internet: verdadera.",
+      "isOfflineText":"Parece que perdimos nuestra conexión.",
     },
     "it":{
       "userData":"Dati dell'uutilizzatore",
@@ -211,6 +223,9 @@ class AppLocalizations {
       "credits":"Accrediti",
       "classmates":"Membri della classe",
       "teachers":"Insegnante di classe",
+      "settings":"Impostazioni",
+      "isOnlineText":"Connessione Internet: vero.",
+      "isOfflineText":"Sembra che abbiamo perso il collegamento.",
     },
     "be_de":{
       "userData":"Benutzerdatä",
@@ -251,6 +266,9 @@ class AppLocalizations {
       "credits":"Es grosses MERCI ah",
       "classmates":"Klassehomies",
       "teachers":"Klasselehrer",
+      "settings":"Ystellige",
+      "isOnlineText":"Yo mir si wyder am start!",
+      "isOfflineText":"Z internet... es het üs verlah...",
     },
   };
 
@@ -293,6 +311,9 @@ class AppLocalizations {
   String get credits => _localizedValues[_languageCode]["credits"];
   String get classmates => _localizedValues[_languageCode]["classmates"];
   String get teachers => _localizedValues[_languageCode]["teachers"];
+  String get settings => _localizedValues[_languageCode]["settings"];
+  String get isOnline => _localizedValues[_languageCode]["isOnlineText"];
+  String get isOffline => _localizedValues[_languageCode]["isOfflineText"];
 
   String getLanguageCode() => _languageCode;
 

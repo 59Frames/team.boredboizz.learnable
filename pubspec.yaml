@@ -18,6 +18,7 @@ dependencies:
   flutter_staggered_grid_view: any
   date_format: any
   flutter_calendar: any
+  connectivity: any
 
 dev_dependencies:
   flutter_test:

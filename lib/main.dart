@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:learnable/locale/locales.dart';
 import 'package:learnable/routes.dart';
 import 'package:learnable/ui/pages/config_page.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:learnable/utils/network_util.dart';
 import 'package:learnable/color_config.dart' as colorConfig;
 
 void main() {
@@ -11,6 +13,7 @@ void main() {
   ]);
   runApp(LearnableApp());
 }
+
 
 class LearnableApp extends StatefulWidget {
   @override
@@ -22,12 +25,14 @@ class _LearnableAppState extends State<LearnableApp> with WidgetsBindingObserver
   @override
   void initState() {
     super.initState();
+    NetworkUtil().activateConnectionSubscription();
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    NetworkUtil().dispose();
     super.dispose();
   }
 

@@ -4,6 +4,8 @@ import 'package:learnable/data/rest_api.dart';
 import 'package:learnable/locale/locales.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:learnable/utils/network_util.dart';
+import 'package:connectivity/connectivity.dart';
 
 class ConfigPage extends StatefulWidget {
   @override
@@ -52,6 +54,11 @@ class _ConfigPageState extends State<ConfigPage> implements BaseNotifier, AuthSt
 
   _setup() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    NetworkUtil().isConnected = connectivityResult == ConnectivityResult.none
+        ? false
+        : true;
 
     var languageCode = prefs.getString("languageCode");
     AppLocalizations().setLanguageCode(languageCode != null ? languageCode : 'de');

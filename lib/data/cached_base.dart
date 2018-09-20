@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:learnable/data/database_helper.dart';
+import 'package:learnable/utils/network_util.dart';
 import 'package:learnable/data/rest_api.dart';
 import 'package:learnable/models/events.dart';
 import 'package:learnable/models/schools.dart';
 import 'package:learnable/models/user.dart';
 import 'package:learnable/utils/parse_util.dart' as parser;
+
+final NetworkUtil networkUtil = NetworkUtil();
 
 /// This class is responsible to cache all the data
 /// while the application is running for a fast access.
@@ -185,212 +188,59 @@ class CachedBase {
   }
 
   Future<Map<int, Lesson>> getClassLessons(int id) async {
-    return await RestAPI().getClassLessons(id).then((lessons){
-      lessons.forEach((id, lesson){
-        _lessons[id] = lesson;
-      });
-    });
+    return null;
   }
 
   Future<Map<int, Member>> getClassMembers(int id) async {
-    return await RestAPI().getClassMemberIds(id).then((memberIds) async {
-      Map<int, Member> members = Map();
-      for (int id in memberIds){
-        await getMemberById(id).then((member){
-          members[member.id] = member;
-        });
-      }
-      return members;
-    });
+    return null;
   }
 
   Future<Map<int, Teacher>> getClassTeachers(int id) async {
-    return await RestAPI().getClassTeachers(id).then((teacherIds) async {
-      var map = Map<int, Teacher>();
-      for (int id in teacherIds){
-        await getTeacherById(id).then((teacher){
-          map[teacher.id] = teacher;
-        });
-      }
-      return map;
-    });
+    return null;
   }
 
   Future<Member> getMemberById(int id) async {
-    if (_members.containsKey(id))
-      return _members[id];
-
-    return await DatabaseHelper().getMemberById(id).then((member) async {
-      if (member != null){
-        _members[member.id] = member;
-        return member;
-      }
-
-      return await RestAPI().getMemberById(id).then((member) {
-        _members[member.id] = member;
-        return member;
-      });
-    });
+    return null;
   }
 
   Future<Location> getLocationByZip(int zip) async {
-    if (_locations.containsKey(zip))
-      return _locations[zip];
-
-    return await DatabaseHelper().getLocationByZip(zip).then((location) async {
-      if (location != null){
-        _locations[location.zip] = location;
-        return location;
-      }
-
-      return await RestAPI().getLocationByZip(zip).then((location) {
-        _locations[location.zip] = location;
-        return location;
-      });
-    });
+    return null;
   }
 
   Future<School> getSchoolById(int id) async {
-    if (_schools.containsKey(id))
-      return _schools[id];
-
-    return await DatabaseHelper().getSchoolById(id).then((school) async {
-      if (school != null){
-        _schools[school.id] = school;
-        return school;
-      }
-
-      return await RestAPI().getSchoolById(id).then((school) {
-        _schools[school.id] = school;
-        return school;
-      });
-    });
+    return null;
   }
 
   Future<Teacher> getTeacherById(int id) async {
-    if (_teachers.containsKey(id))
-      return _teachers[id];
-
-    return await DatabaseHelper().getTeacherById(id).then((teacher) async {
-      if (teacher != null){
-        _teachers[teacher.id] = teacher;
-        return teacher;
-      }
-
-      return await RestAPI().getTeacherById(id).then((teacher) {
-        _teachers[teacher.id] = teacher;
-        return teacher;
-      });
-    });
+    return null;
   }
 
   Future<Course> getCourseById(int id) async {
-    if (_courses.containsKey(id))
-      return _courses[id];
-
-    return await DatabaseHelper().getCourseById(id).then((course) async {
-      if (course != null){
-        _courses[course.id] = course;
-        return course;
-      }
-
-      return await RestAPI().getCourseById(id).then((course) {
-        _courses[course.id] = course;
-        return course;
-      });
-    });
+    return null;
   }
 
   Future<Class> getClassById(int id) async {
-    if (_classes.containsKey(id))
-      return _classes[id];
-
-    return await DatabaseHelper().getClassById(id).then((clazz) async {
-      if (clazz != null){
-        _classes[clazz.id] = clazz;
-        return clazz;
-      }
-
-      return await RestAPI().getClassById(id).then((clazz) {
-        _classes[clazz.id] = clazz;
-        return clazz;
-      });
-    });
+    return null;
   }
 
   Future<Lesson> getLessonById(int id) async {
-    if (_lessons.containsKey(id))
-      return _lessons[id];
-
-    return await DatabaseHelper().getLessonById(id).then((lesson) async {
-      if (lesson != null){
-        _lessons[lesson.id] = lesson;
-        return lesson;
-      }
-
-      return await RestAPI().getLessonById(id).then((lesson) {
-        _lessons[lesson.id] = lesson;
-        return lesson;
-      });
-    });
+    return null;
   }
 
   Future<EventType> getEventTypeById(int id) async {
-    if (_eventTypes.containsKey(id))
-      return _eventTypes[id];
-
-    return await DatabaseHelper().getEventTypeById(id).then((eventType) async {
-      if (eventType != null){
-        _eventTypes[eventType.id] = eventType;
-        return eventType;
-      }
-
-      return await RestAPI().getEventTypeById(id).then((eventType) {
-        _eventTypes[eventType.id] = eventType;
-        return eventType;
-      });
-    });
+    return null;
   }
 
   Future<Event> getEventById(int id) async {
-    if (_events.containsKey(id))
-      return _events[id];
-
-    return await DatabaseHelper().getEventById(id).then((event) async {
-      if (event != null){
-        _events[event.id] = event;
-        return event;
-      }
-
-      return await RestAPI().getEventById(id).then((event) {
-        _events[event.id] = event;
-        return event;
-      });
-    });
+    return null;
   }
 
   List<Lesson> getLocalLessonsByDate(DateTime date) {
-    final comparableDate = parser.getNumberedDateString(date);
-    final list = <Lesson>[];
-
-
-    _lessons.forEach((id, lesson){
-      if (parser.getNumberedDateString(lesson.start) == comparableDate)
-        list.add(lesson);
-    });
-
-    return list;
+    return null;
   }
 
   Future<List<Lesson>> getLessonsByDate(DateTime date) async {
-    List<Lesson> returnableList = List();
-    return await RestAPI().getLessonsByDate(parser.getNumberedDateString(date)).then((lessonMap) {
-      lessonMap.forEach((id, lesson){
-        returnableList.add(lesson);
-        _lessons[id] = lesson;
-      });
-      return returnableList;
-    });
+    return null;
   }
 
   bool isOnline() => _status == BaseStatus.ONLINE;
@@ -435,20 +285,6 @@ class CachedBase {
     _eventTypes = Map();
     _schools = Map();
     deleteDataFromLocalDatabase();
-  }
-
-  Future<Null> refreshEventMap() async {
-    await RestAPI().getUserEvents(User()).then((List<int> list) async {
-      _events.clear();
-      for (int event in list){
-        await RestAPI().getEventById(event).then((event){
-          _events[event.id] = event;
-          return event;
-        });
-      }
-    });
-
-    return null;
   }
 
 }

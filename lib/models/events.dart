@@ -60,15 +60,12 @@ class EventType{
     switch(this.id){
       case 1:
         this.icon = Icons.school;
-        this.image = AssetImage('assets/exam.jpeg');
         break;
       case 2:
         this.icon = Icons.book;
-        this.image = AssetImage('assets/homework.jpg');
         break;
       case 3:
         this.icon = Icons.event;
-        this.image = AssetImage('assets/event.jpg');
         break;
       default:
         this.icon = Icons.error;
