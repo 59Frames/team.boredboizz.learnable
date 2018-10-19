@@ -1,0 +1,9 @@
+{
+  "APP_NAME":"Learnable",
+  "COLOR_SCHEME": {
+    "PRIMARY":"#C0495E",
+    "ACCENT":"#E7CBE7",
+    "PRIMARY LIGHT":"#6638C0",
+    "PRIMARY DARK":"#250F4F",
+  }
+}
