@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    networkUtil.subscribe(this);
+    NetworkUtil().subscribe(this);
     tabController = TabController(length: navigationItems.length, vsync: this);
   }
 
@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: colorConfig.PAGE_BACKGROUND_COLOR,
       appBar: AppBar(
         title: Text(
           localizations.applicationName,
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.more_vert, color: colorConfig.BRIGHT_FONT_COLOR,),
+            icon: Icon(Icons.dehaze, color: colorConfig.BRIGHT_FONT_COLOR,),
             onPressed: _openSettings,
           )
         ],
@@ -90,7 +91,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         children: navigationItems.map((item) => item.content).toList(),
       ),
       bottomNavigationBar: Material(
-        color: colorConfig.PRIMARY_COLOR,
+        color: colorConfig.PRIMARY_COLOR_DARK,
         child: TabBar(
           controller: tabController,
           tabs: navigationItems.map((item) => Tab(icon: Icon(item.icon),)).toList(),
@@ -117,6 +118,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         )
       );
     } else {
+      CachedBase().setUp();
       _scaffoldKey.currentState.showSnackBar(
           SnackBar(
             content: Text(localizations.isOnline),
@@ -189,27 +191,6 @@ class _AppDrawerState extends State<AppDrawer> {
             ),
           ),
           Divider(),
-          ListTile(
-            title: InkWell(
-                onTap: _onLogout,
-                child: Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.red
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(8.0))
-                  ),
-                  child: Text(
-                    localizations.signOut,
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16.0
-                    ),
-                  ),
-                )
-            ),
-          ),
         ],
       ),
     );
@@ -221,15 +202,6 @@ class _AppDrawerState extends State<AppDrawer> {
 
   void _navToAboutPage() {
     Navigator.of(context).pushNamed("/about");
-  }
-
-  void _onLogout() {
-    User().reset();
-    DatabaseHelper().deleteUser();
-    CachedBase().clean();
-    RestAPI().logout();
-    Navigator.of(context).pushReplacementNamed("/login");
-    AuthStateProvider().notify(AuthState.LOGGED_OUT);
   }
 
   void _onDropdownMenuChange(value) async {

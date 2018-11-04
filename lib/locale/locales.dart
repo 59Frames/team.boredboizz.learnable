@@ -9,20 +9,20 @@ class AppLocalizations {
   }
 
   String _languageCode;
-  List<ChangeDetector> _subscribers;
+  List<LanguageChangeDetector> _subscribers;
 
   final Map<String, Map<String, String>> _localizedValues = {
     "en":{
       "userData":"User data",
       "language":"Language",
       "userName":"Username",
-      "email":"Email",
+      "email":"E-Mail",
       "about":"Impressum",
       "firstName":"First name",
       "surname":"Surname",
       "password":"Password",
-      "usernameOrEmail":"Username or Email",
-      "usernameOrEmailMustHaveAtLeastForCharacters":"Username or Email must have at least 4 characters.",
+      "usernameOrEmail":"Username or E-Mail",
+      "usernameOrEmailMustHaveAtLeastForCharacters":"Username or E-Mail must have at least 4 characters.",
       "successfullySignedIn":"Successfully signed in",
       "signInToLearnable":"Sign In To learnable",
       "signIn":"Sign In",
@@ -53,7 +53,19 @@ class AppLocalizations {
       "teachers":"Class teachers",
       "settings":"Settings",
       "isOnlineText":"Aaaaaand we are live!",
-      "isOfflineText":"looks like Joey doesn't share internet.",
+      "isOfflineText":"looks like Joey doesn't wanna share internet.",
+      "writeEmailTo":"Write an e-mail to",
+      "information":"information",
+      "monday":"Monday",
+      "tuesday":"Tuesday",
+      "wednesday":"Wednesday",
+      "thursday":"Thursday",
+      "friday":"Friday",
+      "saturday":"Saturday",
+      "sunday":"Sunday",
+      "enterValidEmail":"I don't know Rick, It looks not like an E-Mail to me.",
+      "changeEmail":"Change E-Mail",
+      "changePassword":"Change Password",
     },
     "de":{
       "userData":"Benutzerdaten",
@@ -97,6 +109,18 @@ class AppLocalizations {
       "settings":"Einstellungen",
       "isOnlineText":"Und wir sind zurück im Internet",
       "isOfflineText":"Scotty, das Internet ist ausgefallen...",
+      "writeEmailTo":"Schreibe eine E-Mail an",
+      "information":"information",
+      "monday":"Montag",
+      "tuesday":"Dienstag",
+      "wednesday":"Mittwoch",
+      "thursday":"Donnerstag",
+      "friday":"Freitag",
+      "saturday":"Samstag",
+      "sunday":"Sonntag",
+      "enterValidEmail":"Ich weiss ja nicht aber das sieht mir nicht nach einer E-Mail aus...",
+      "changeEmail":"E-Mail ändern",
+      "changePassword":"Passwort ändern",
     },
     "fr":{
       "userData":"Données utilisateur",
@@ -140,6 +164,18 @@ class AppLocalizations {
       "settings":"Paramètres",
       "isOnlineText":"Connexion Internet : true",
       "isOfflineText":"On dirait qu'on a perdu notre connexion.",
+      "writeEmailTo":"Écrivez un courriel à l'adresse suivante",
+      "information":"information",
+      "monday":"Lundi",
+      "tuesday":"Mardi",
+      "wednesday":"Mercredi",
+      "thursday":"Jeudi",
+      "friday":"Vendredi",
+      "saturday":"Samedi",
+      "sunday":"Dimanche",
+      "enterValidEmail":"Je ne sais pas Rick, ça ne ressemble pas à un email pour moi.",
+      "changeEmail":"Modifier l'email",
+      "changePassword":"changer le mot de passe",
     },
     "es":{
       "userData":"Datos de usuario",
@@ -183,6 +219,18 @@ class AppLocalizations {
       "settings":"Configuraciones",
       "isOnlineText":"Conexión a Internet: verdadera.",
       "isOfflineText":"Parece que perdimos nuestra conexión.",
+      "writeEmailTo":"Escriba un correo electrónico a",
+      "information":"información",
+      "monday":"Lunes",
+      "tuesday":"Martes",
+      "wednesday":"Miércoles",
+      "thursday":"Jueves",
+      "friday":"Viernes",
+      "saturday":"Sábado",
+      "sunday":"Domingo",
+      "enterValidEmail":"No lo sé, Rick. A mí no me parece un correo electrónico.",
+      "changeEmail":"cambiar email",
+      "changePassword":"cambiar contraseña",
     },
     "it":{
       "userData":"Dati dell'uutilizzatore",
@@ -226,6 +274,18 @@ class AppLocalizations {
       "settings":"Impostazioni",
       "isOnlineText":"Connessione Internet: vero.",
       "isOfflineText":"Sembra che abbiamo perso il collegamento.",
+      "writeEmailTo":"Scrivi una e-mail a",
+      "information":"informazioni",
+      "monday":"Lunedì",
+      "tuesday":"Martedì",
+      "wednesday":"Mercoledì",
+      "thursday":"Giovedì",
+      "friday":"Venerdì",
+      "saturday":"Sabato",
+      "sunday":"Domenica",
+      "enterValidEmail":"Non conosco Rick, non mi sembra un'email.",
+      "changeEmail":"cambia e-mail",
+      "changePassword":"cambiare la password",
     },
     "be_de":{
       "userData":"Benutzerdatä",
@@ -269,6 +329,18 @@ class AppLocalizations {
       "settings":"Ystellige",
       "isOnlineText":"Yo mir si wyder am start!",
       "isOfflineText":"Z internet... es het üs verlah...",
+      "writeEmailTo":"Schriib es mail ah",
+      "information":"Information",
+      "monday":"Mäntig",
+      "tuesday":"Zyschtig",
+      "wednesday":"Mittwuch",
+      "thursday":"Donschtig",
+      "friday":"Frytig",
+      "saturday":"Samschtig",
+      "sunday":"Sunntig",
+      "enterValidEmail":"Ih weiss nid, ds gseht nid würk nach ere mail us...",
+      "changeEmail":"Würd gärn mis Mail ändere",
+      "changePassword":"Mis Passwort würdi ono gärn ändere.",
     },
   };
 
@@ -314,6 +386,18 @@ class AppLocalizations {
   String get settings => _localizedValues[_languageCode]["settings"];
   String get isOnline => _localizedValues[_languageCode]["isOnlineText"];
   String get isOffline => _localizedValues[_languageCode]["isOfflineText"];
+  String get writeEmailTo => _localizedValues[_languageCode]["writeEmailTo"];
+  String get information => _localizedValues[_languageCode]["information"];
+  String get monday => _localizedValues[_languageCode]["monday"];
+  String get tuesday => _localizedValues[_languageCode]["tuesday"];
+  String get wednesday => _localizedValues[_languageCode]["wednesday"];
+  String get thursday => _localizedValues[_languageCode]["thursday"];
+  String get friday => _localizedValues[_languageCode]["friday"];
+  String get saturday => _localizedValues[_languageCode]["saturday"];
+  String get sunday => _localizedValues[_languageCode]["sunday"];
+  String get enterValidEmail => _localizedValues[_languageCode]["enterValidEmail"];
+  String get changeEmail => _localizedValues[_languageCode]["changeEmail"];
+  String get changePassword => _localizedValues[_languageCode]["changePassword"];
 
   String getLanguageCode() => _languageCode;
 
@@ -323,17 +407,21 @@ class AppLocalizations {
         : "de";
 
     if (_subscribers.length > 0)
-      for (ChangeDetector c in _subscribers)
+      for (LanguageChangeDetector c in _subscribers)
         c.onLanguageCodeChange(_languageCode);
 
     return _languageCode;
   }
 
-  void subscribe(ChangeDetector detector) {
+  void subscribe(LanguageChangeDetector detector) {
     this._subscribers.add(detector);
+  }
+
+  void unsubscribe(LanguageChangeDetector detector){
+    _subscribers.remove(detector);
   }
 }
 
-abstract class ChangeDetector {
+abstract class LanguageChangeDetector {
   void onLanguageCodeChange(String languageCode);
 }

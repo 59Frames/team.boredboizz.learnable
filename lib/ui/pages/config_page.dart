@@ -3,6 +3,7 @@ import 'package:learnable/data/cached_base.dart';
 import 'package:learnable/data/rest_api.dart';
 import 'package:learnable/locale/locales.dart';
 import 'package:flutter/material.dart';
+import 'package:learnable/utils/preference_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:learnable/utils/network_util.dart';
 import 'package:connectivity/connectivity.dart';
@@ -53,7 +54,7 @@ class _ConfigPageState extends State<ConfigPage> implements BaseNotifier, AuthSt
   }
 
   _setup() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await Pretender().preferences;
     var connectivityResult = await (Connectivity().checkConnectivity());
 
     NetworkUtil().isConnected = connectivityResult == ConnectivityResult.none

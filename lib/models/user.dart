@@ -7,12 +7,13 @@ class User {
 
   int id;
   String email = "";
-  String hash = "";
   String username = "";
   String firstname = "";
   String lastname = "";
   bool isAdmin = false;
   bool isTeacher = false;
+
+  String fullName() => "$firstname $lastname";
 
   User.fromMap(dynamic obj){
     _instance.id = obj['id'];
@@ -39,7 +40,6 @@ class User {
   void reset(){
     _instance.id = null;
     _instance.email = "";
-    _instance.hash = "";
     _instance.username = "";
     _instance.firstname = "";
     _instance.lastname = "";
@@ -49,6 +49,6 @@ class User {
 
   @override
   String toString() {
-    return "{ id: $id, email: $email, hash: $hash, username: $username, full_name: $firstname $lastname }";
+    return "{ id: $id, email: $email, username: $username, full_name: $firstname $lastname }";
   }
 }

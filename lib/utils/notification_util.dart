@@ -1,55 +1,50 @@
-import 'package:local_notifications/local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Notifier {
   static final Notifier _instance = Notifier._internal();
 
-  final AndroidNotificationChannel channel = const AndroidNotificationChannel(
-      id: 'mobile.learnable.ch',
-      name: 'Learnable',
-      description: 'Grant this app the ability to show notifications',
-      importance: AndroidNotificationChannelImportance.HIGH
-  );
+  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  final _androidSettings = AndroidInitializationSettings('app_icon');
+  final _iosSettings = IOSInitializationSettings();
+
+  final _androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'mobile.learnable.ch', 'Learnable', 'Grant this app the ability to show notifications',
+      importance: Importance.Max, priority: Priority.High);
+  final _iOSPlatformChannelSpecifics = IOSNotificationDetails();
 
   factory Notifier() => _instance;
 
   Notifier._internal(){
-    _configure();
+    var initializationSettings = InitializationSettings(_androidSettings, _iosSettings);
+    _plugin.initialize(initializationSettings, selectNotification: onSelectNotification);
   }
 
-  void _configure() async {
-    await LocalNotifications.createAndroidNotificationChannel(channel: channel);
+  Future onSelectNotification(String message) async {
+    print("payload : $message");
   }
 
   void notify(String title, String content, int id) async {
-    await LocalNotifications.createNotification(
-      title: title,
-      content: content,
-      id: id,
-      androidSettings: AndroidSettings(
-        channel: channel,
-        priority: AndroidNotificationPriority.DEFAULT,
-        vibratePattern: AndroidVibratePatterns.DEFAULT
-      ),
-      iOSSettings: IOSSettings(
-        presentWhileAppOpen: true,
-      )
+    var platformChannelSpecifics = NotificationDetails(_androidPlatformChannelSpecifics, _iOSPlatformChannelSpecifics);
+
+    await _plugin.show(
+        id,
+        title,
+        content,
+        platformChannelSpecifics,
+        payload: 'item id $id'
     );
   }
 
-  void notifyOnGoing(String title, String content, int id) async {
-    await LocalNotifications.createNotification(
-      title: title,
-      content: content,
-      id: id,
-      androidSettings: AndroidSettings(
-        channel: channel,
-        priority: AndroidNotificationPriority.MAX,
-        vibratePattern: AndroidVibratePatterns.DEFAULT,
-        isOngoing: true
-      ),
-      iOSSettings: IOSSettings(
-        presentWhileAppOpen: true,
-      )
+  void schedule(String title, String content, int id, DateTime date) async {
+    var platformChannelSpecifics = NotificationDetails(_androidPlatformChannelSpecifics, _iOSPlatformChannelSpecifics);
+
+    await _plugin.schedule(
+        id,
+        title,
+        content,
+        date,
+        platformChannelSpecifics,
+        payload: 'item id $id'
     );
   }
 }

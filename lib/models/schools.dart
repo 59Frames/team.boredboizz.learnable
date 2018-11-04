@@ -1,34 +1,48 @@
-import 'package:learnable/data/cached_base.dart';
+import 'dart:async';
 
-class Lesson {
-  int id;
+import 'package:learnable/data/cached_base.dart';
+import 'package:learnable/data/database_helper.dart';
+import 'package:learnable/models/classmodel.dart';
+
+class Lesson extends LearnableObject<Lesson> {
   Course course;
   Class clazz;
   Teacher teacher;
   int startLesson;
   int duration;
-  String room;
+  String room = "";
   DateTime start;
   DateTime end;
   int week;
 
-  Lesson();
+  Lesson(obj) : super(obj);
 
-  initializeAsyncFromMap(dynamic obj) async {
-    id = obj['id'];
+  @override
+  Future init(dynamic obj) async {
     await CachedBase().getCourseById(obj['course']).then((course) => this.course = course);
     await CachedBase().getClassById(obj['class']).then((clazz) => this.clazz = clazz);
     await CachedBase().getTeacherById(obj['teacher']).then((teacher) => this.teacher = teacher);
-    startLesson = obj['start_lesson'];
-    duration = obj['duration'];
-    room = obj['room'];
-    start = DateTime.parse(obj['start']);
-    end = DateTime.parse(obj['end']);
-    week = obj['week'];
-
-    print("lesson ${this.id} ${this.toMap()} loaded");
+    return;
   }
 
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("lessons", this);
+  }
+
+  @override
+  Lesson fromMap() {
+    this.startLesson = jsonObj['start_lesson'];
+    this.duration = jsonObj['duration'];
+    this.room = jsonObj['room'];
+    this.start = DateTime.parse(jsonObj['start']);
+    this.end = DateTime.parse(jsonObj['end']);
+    this.week = jsonObj['week'];
+
+    return this;
+  }
+
+  @override
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
     map['id'] = id;
@@ -46,50 +60,48 @@ class Lesson {
 
 }
 
-class Course {
-  int id;
-  String title;
-  String short;
+class Course extends LearnableObject<Course> {
+  String title = "";
+  String short = "";
 
-  Course.fromMap(dynamic obj) {
-    id = obj['id'];
-    title = obj['title'];
-    short = obj['short'];
+  Course(obj):super(obj);
 
-
-    print("Course ${this.id} ${this.toMap()} loaded");
-  }
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
-    map['id'] = id;
-    map['title'] = title;
-    map['short'] = short;
+    map['id'] = this.id;
+    map['title'] = this.title;
+    map['short'] = this.short;
     return map;
+  }
+
+  @override
+  Course fromMap() {
+    this.title = jsonObj['title'];
+    this.short = jsonObj['short'];
+    print("Course ${this.id} loaded");
+    return this;
+  }
+
+  @override
+  Future init(obj) async {
+    return;
+  }
+
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("courses", this);
   }
 }
 
-class Class {
-  int id;
+class Class extends LearnableObject<Class> {
   School school;
   Teacher teacher;
-  String title;
-  Map<int, Member> members;
-  Map<int, Teacher> teachers;
+  String title = "";
+  Map<int, Member> members = Map();
+  Map<int, Teacher> teachers = Map();
 
-  Class();
-
-  initializeAsyncFromMap(dynamic obj) async {
-    this.id = obj['id'];
-    await CachedBase().getSchoolById(obj['school']).then((school) => this.school = school);
-    await CachedBase().getTeacherById(obj['teacher']).then((teacher) => this.teacher = teacher);
-    await CachedBase().getClassMembers(this.id).then((members) => this.members = members);
-    await CachedBase().getClassTeachers(this.id).then((teachers) => this.teachers = teachers);
-    this.title = obj['title'];
-
-    print("Class ${this.id} ${this.toMap()} loaded");
-    print("Classmembers: ${this.members}");
-  }
+  Class(obj):super(obj);
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
@@ -99,69 +111,69 @@ class Class {
     map['title'] = this.title;
     return map;
   }
+
+  @override
+  Class fromMap() {
+    this.title = jsonObj['title'];
+    print("Class ${this.id} loaded");
+    return this;
+  }
+
+  @override
+  Future init(obj) async {
+    await CachedBase().getSchoolById(obj['school']).then((school) => this.school = school);
+    await CachedBase().getTeacherById(obj['teacher']).then((teacher) => this.teacher = teacher);
+    await CachedBase().getClassMembers(this.id).then((members) => this.members = members);
+    await CachedBase().getClassTeachers(this.id).then((teachers) => this.teachers = teachers);
+    return;
+  }
+
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("classes", this);
+  }
 }
 
-class School {
-  int id;
-  Location location;
-  String title;
+class School extends LearnableObject<School> {
+  int location;
+  String title = "";
 
-  School();
-
-  initializeAsyncFromMap(dynamic obj) async {
-    this.id = obj['id'];
-    await CachedBase().getLocationByZip(obj['location']).then((location) => this.location = location);
-    this.title = obj['title'];
-
-    print("School ${this.id} ${this.toMap()} loaded");
-  }
+  School(obj):super(obj);
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
     map['id'] = this.id;
-    map['location'] = this.location.zip;
+    map['location'] = this.location;
     map['title'] = this.title;
     return map;
   }
-}
 
-class Location {
-  int zip;
-  String place;
-
-  Location.fromMap(dynamic obj){
-    this.zip = obj['zip'];
-    this.place = obj['place'];
-
-    print("Location ${this.zip} ${this.toMap()} loaded");
+  @override
+  School fromMap() {
+    this.location = jsonObj['location'];
+    this.title = jsonObj['title'];
+    print("School ${this.id} loaded");
+    return this;
   }
 
-  Map<String, dynamic> toMap(){
-    var map = Map<String, dynamic>();
-    map['zip'] = this.zip;
-    map['place'] = this.place;
-    return map;
+  @override
+  Future init(obj) async {
+    return;
+  }
+
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("schools", this);
   }
 }
 
-class Teacher {
-  int id;
+class Teacher extends LearnableObject<Teacher> {
   String email = "";
   String username = "";
   String firstname = "";
   String lastname = "";
 
-  Teacher();
-
-  Teacher.fromMap(dynamic obj){
-    this.id = obj['id'];
-    this.email = obj['email'];
-    this.username = obj['username'];
-    this.firstname = obj['first_name'];
-    this.lastname = obj['last_name'];
-
-    print("Teacher ${this.id} ${this.toMap()} loaded");
-  }
+  Teacher(obj):super(obj);
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
@@ -172,26 +184,35 @@ class Teacher {
     map['last_name'] = this.lastname;
     return map;
   }
+
+  @override
+  Teacher fromMap() {
+    this.email = jsonObj['email'];
+    this.username = jsonObj['username'];
+    this.firstname = jsonObj['first_name'];
+    this.lastname = jsonObj['last_name'];
+    print("Teacher ${this.id} loaded");
+    return this;
+  }
+
+  @override
+  Future init(obj) async {
+    return;
+  }
+
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("teachers", this);
+  }
 }
 
-class Member {
-  int id;
+class Member extends LearnableObject<Member> {
   String email = "";
   String username = "";
   String firstname = "";
   String lastname = "";
 
-  Member();
-
-  Member.fromMap(dynamic obj){
-    this.id = obj['id'];
-    this.email = obj['email'];
-    this.username = obj['username'];
-    this.firstname = obj['first_name'];
-    this.lastname = obj['last_name'];
-
-    print("Member ${this.id} ${this.toMap()} loaded");
-  }
+  Member(obj) : super(obj);
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
@@ -201,5 +222,26 @@ class Member {
     map['first_name'] = this.firstname;
     map['last_name'] = this.lastname;
     return map;
+  }
+
+  @override
+  Member fromMap() {
+    this.email = jsonObj['email'];
+    this.username = jsonObj['username'];
+    this.firstname = jsonObj['first_name'];
+    this.lastname = jsonObj['last_name'];
+
+    print("Member ${this.id} loaded");
+    return this;
+  }
+
+  @override
+  Future init(obj) async {
+    return;
+  }
+
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("members", this);
   }
 }

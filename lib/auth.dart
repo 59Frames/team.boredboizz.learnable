@@ -1,3 +1,7 @@
+import 'package:learnable/data/cached_base.dart';
+import 'package:learnable/data/rest_api.dart';
+import 'package:learnable/models/user.dart';
+
 import 'data/database_helper.dart';
 
 enum AuthState {LOGGED_IN, LOGGED_OUT }
@@ -52,5 +56,13 @@ class AuthStateProvider {
   void notify(AuthState state){
     print("changing auth state to ${state.toString()}");
     _subscribers.forEach((AuthStateListener s) => s.onAuthStateChanged(state));
+  }
+
+  void logout(){
+    User().reset();
+    DatabaseHelper().deleteUser();
+    CachedBase().clean();
+    RestAPI().logout();
+    this.notify(AuthState.LOGGED_OUT);
   }
 }

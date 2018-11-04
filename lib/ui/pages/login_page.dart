@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:learnable/locale/locales.dart';
 import 'package:learnable/ui/logic/login_screen_presenter.dart';
 import 'package:learnable/color_config.dart' as colorConfig;
+import 'package:learnable/utils/network_util.dart';
 
 final localizations = AppLocalizations();
 
@@ -32,82 +33,98 @@ class _LoginPageState extends State<LoginPage> implements LoginScreenContract {
 
   @override
   Widget build(BuildContext context) {
-    var loginBtn = RaisedButton(
-      padding: const EdgeInsets.all(16.0),
-      onPressed: _submit,
-      child: Text(
-        localizations.signIn,
-        style: TextStyle(
-            color: colorConfig.PRIMARY_ICON_COLOR
-        ),
-      ),
-      color: colorConfig.PRIMARY_COLOR_LIGHT,
+
+    final assetsImage = AssetImage('assets/images/axolotl.png');
+    final axolotlImage = Image(image: assetsImage);
+
+    var loginBtn = InkWell(
+        onTap: _submit,
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+              color: colorConfig.PRIMARY_COLOR_DARK,
+              border: Border.all(
+                  color: colorConfig.PRIMARY_COLOR_DARK,
+                  width: 2.0
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(8.0))
+          ),
+          child: Text(
+            localizations.signIn,
+            style: TextStyle(
+                color: colorConfig.BRIGHT_FONT_COLOR,
+                fontSize: 16.0
+            ),
+          ),
+        )
     );
 
     var loginForm = Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        axolotlImage,
         Text(
           localizations.signInToLearnable,
           style: TextStyle(
               fontSize: 24.0,
-              color: colorConfig.PRIMARY_ICON_COLOR
+              fontWeight: FontWeight.bold,
+              color: colorConfig.PRIMARY_COLOR_DARK
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(32.0),
           child: Form(
+            autovalidate: true,
             key: formKey,
             child: Column(
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-                      color: colorConfig.PRIMARY_COLOR.withRed(colorConfig.PRIMARY_COLOR.red+8).withGreen(colorConfig.PRIMARY_COLOR.green+8).withBlue(colorConfig.PRIMARY_COLOR.blue+8)
+                      color: colorConfig.PAGE_BACKGROUND_COLOR.withRed(colorConfig.PAGE_BACKGROUND_COLOR.red+8).withGreen(colorConfig.PAGE_BACKGROUND_COLOR.green+8).withBlue(colorConfig.PAGE_BACKGROUND_COLOR.blue+8)
                   ),
                   padding: const EdgeInsets.all(16.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     onSaved: (val) => _q = val,
-                    validator: (val) {
-                      return val.length < 4
-                          ? localizations.usernameOrEmailMustHaveAtLeastForCharacters
-                          : null;
-                    },
+                    validator: _validateEmail,
                     style: TextStyle(
                       fontSize: 18.0,
-                      color: colorConfig.PRIMARY_ICON_COLOR,
-                      decorationColor: colorConfig.PRIMARY_ICON_COLOR
+                      color: colorConfig.DARK_FONT_COLOR,
+                      decorationColor: colorConfig.DARK_FONT_COLOR
                     ),
                     decoration: InputDecoration(
-                      labelText: localizations.usernameOrEmail,
+                      labelText: localizations.email,
                       labelStyle: TextStyle(
-                        color: colorConfig.PRIMARY_ICON_COLOR,
+                        color: colorConfig.DARK_FONT_COLOR,
                       ),
-                      icon: Icon(Icons.email, color: colorConfig.PRIMARY_ICON_COLOR,),
+                      icon: Icon(Icons.email, color: colorConfig.PRIMARY_COLOR_DARK,),
                       errorStyle: TextStyle(
-                        color: colorConfig.PRIMARY_ICON_COLOR,
+                        color: colorConfig.BAD_COLOR,
                       ),
+                      errorMaxLines: 2,
                       border: InputBorder.none
                     ),
                   ),
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: colorConfig.PRIMARY_COLOR.withRed(colorConfig.PRIMARY_COLOR.red+8).withGreen(colorConfig.PRIMARY_COLOR.green+8).withBlue(colorConfig.PRIMARY_COLOR.blue+8)
+                    color: colorConfig.PAGE_BACKGROUND_COLOR.withRed(colorConfig.PAGE_BACKGROUND_COLOR.red+8).withGreen(colorConfig.PAGE_BACKGROUND_COLOR.green+8).withBlue(colorConfig.PAGE_BACKGROUND_COLOR.blue+8)
                   ),
                   padding: const EdgeInsets.all(16.0),
                   child: TextFormField(
                     onSaved: (val) => _password = val,
                     style: TextStyle(
                       fontSize: 18.0,
-                      color: colorConfig.PRIMARY_ICON_COLOR
+                      color: colorConfig.DARK_FONT_COLOR
                     ),
                     decoration: InputDecoration(
                       labelText: localizations.password,
                       labelStyle: TextStyle(
-                        color: colorConfig.PRIMARY_ICON_COLOR,
+                        color: colorConfig.DARK_FONT_COLOR,
                       ),
-                      icon: Icon(Icons.fingerprint, color: colorConfig.PRIMARY_ICON_COLOR,),
+                      icon: Icon(Icons.fingerprint, color: colorConfig.PRIMARY_COLOR_DARK,),
                       border: InputBorder.none
                     ),
                     obscureText: true,
@@ -117,34 +134,58 @@ class _LoginPageState extends State<LoginPage> implements LoginScreenContract {
             ),
           ),
         ),
-        _isLoading ? CircularProgressIndicator() : loginBtn
+        _isLoading ? CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(colorConfig.PRIMARY_COLOR_DARK),
+        ) : loginBtn
       ],
     );
 
     return Scaffold(
       appBar: null,
       key: scaffoldKey,
-      backgroundColor: colorConfig.PRIMARY_COLOR,
+      backgroundColor: colorConfig.PAGE_BACKGROUND_COLOR,
       body: Container(
         child: Center(
-          child: loginForm,
+          child: SingleChildScrollView(
+            child: loginForm,
+          ),
         ),
       ),
     );
   }
 
   void _submit() {
+    formKey.currentState.save();
     final form = formKey.currentState;
 
-    if(form.validate()){
-      setState(() => _isLoading = true);
-      form.save();
-      _presenter.doLogin(_q, _password, 0);
+    if(NetworkUtil().isConnected){
+      if(form.validate()){
+        setState(() => _isLoading = true);
+        form.save();
+        _presenter.doLogin(_q, _password, 0);
+      }
+    } else {
+      onLoginError(AppLocalizations().isOffline);
     }
   }
 
   void _showSnackBar(String text){
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(text)));
+    scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(text),
+        backgroundColor: colorConfig.PRIMARY_COLOR_DARK,
+      )
+    );
+  }
+
+  String _validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value))
+      return localizations.enterValidEmail;
+    else
+      return null;
   }
 
   @override
@@ -159,11 +200,10 @@ class _LoginPageState extends State<LoginPage> implements LoginScreenContract {
     var db = DatabaseHelper();
     await db.deleteUser();
     await db.saveUser();
+    setState(() => _isLoading = false);
     CachedBase().setUp().then((n){
-      setState(() => _isLoading = false);
       Navigator.of(context).pushReplacementNamed("/home");
     });
-    setState(() => _isLoading = false);
     AuthStateProvider().notify(AuthState.LOGGED_IN);
   }
 }

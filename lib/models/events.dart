@@ -1,26 +1,38 @@
+import 'dart:async';
+
 import 'package:learnable/data/cached_base.dart';
+import 'package:learnable/data/database_helper.dart';
+import 'package:learnable/models/classmodel.dart';
 import 'package:learnable/models/schools.dart';
 import 'package:flutter/material.dart';
 
-class Event{
-  int id;
+class Event extends LearnableObject<Event>{
   EventType eventType;
   Lesson lesson;
+  String title = "";
+  String description = "";
   Member creator;
-  String title;
-  String description;
 
-  Event();
+  Event(obj) : super(obj);
 
-  initializeAsyncFromMap(dynamic obj) async {
-    id = obj['id'];
+  @override
+  Future init(obj) async {
     await CachedBase().getEventTypeById(obj['type']).then((eventType) => this.eventType = eventType);
     await CachedBase().getLessonById(obj['lesson']).then((lesson) => this.lesson = lesson);
     await CachedBase().getMemberById(obj['creator']).then((member) => this.creator = member);
-    title = obj['title'];
-    description = obj['description'];
+    return;
+  }
 
-    print("Event ${this.id} ${this.toMap()} loaded");
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("events", this);
+  }
+
+  @override
+  Event fromMap() {
+    this.title = jsonObj['title'];
+    this.description = jsonObj['description'];
+    return this;
   }
 
   Map<String, dynamic> toMap() {
@@ -35,19 +47,12 @@ class Event{
   }
 }
 
-class EventType{
-  int id;
+class EventType extends LearnableObject<EventType>{
   String type;
   IconData icon;
   AssetImage image;
 
-  EventType.fromMap(dynamic obj){
-    id = obj['id'];
-    type = obj['type'];
-    _loadImageAndIcon();
-
-    print("EventType ${this.id} ${this.toMap()} loaded");
-  }
+  EventType(obj) : super(obj);
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -70,5 +75,24 @@ class EventType{
       default:
         this.icon = Icons.error;
     }
+  }
+
+  @override
+  EventType fromMap() {
+    this.type = jsonObj['type'];
+    this._loadImageAndIcon();
+
+    print("EventType ${this.id} loaded");
+    return this;
+  }
+
+  @override
+  Future init(obj) async {
+    return;
+  }
+
+  @override
+  Future persist() async {
+    DatabaseHelper().saveLearnableObject("event_types", this);
   }
 }

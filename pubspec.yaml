@@ -7,18 +7,18 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: any
-  sqflite: any
-  path_provider: any
-  charts_flutter: any
-  http: any
-  shared_preferences: any
-  local_auth: any
-  local_notifications: any
-  flutter_staggered_grid_view: any
-  date_format: any
-  flutter_calendar: any
-  connectivity: any
+  cupertino_icons:
+  sqflite:
+  path_provider:
+  http:
+  shared_preferences:
+  local_auth:
+  flutter_local_notifications:
+  flutter_staggered_grid_view:
+  date_format:
+  flutter_calendar:
+  connectivity:
+  url_launcher:
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +40,10 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
+
+  assets:
+    - assets/images/axolotl.png
+    - assets/images/axolotl_background.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
